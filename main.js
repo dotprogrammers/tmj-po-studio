@@ -13,6 +13,19 @@ const { renderDocument, invoiceNumber } = require('./renderer/template');
 let mainWindow = null;
 let printWindow = null;
 
+// --- diagnostics: append to a log file so failures are inspectable ---
+const LOG_FILE = () => path.join(app.getPath('userData'), 'tmj-studio.log');
+function log(...args) {
+  const line = `[${new Date().toISOString()}] ${args.join(' ')}\n`;
+  try {
+    fs.mkdirSync(path.dirname(LOG_FILE()), { recursive: true });
+    fs.appendFileSync(LOG_FILE(), line);
+  } catch (_) { /* logging must never break the app */ }
+  console.log(line.trim());
+}
+process.on('uncaughtException', (e) => { log('UNCAUGHT', e && e.stack || String(e)); });
+process.on('unhandledRejection', (e) => { log('UNHANDLED', (e && e.stack) || String(e)); });
+
 const SETTINGS_FILE = () => path.join(app.getPath('userData'), 'settings.json');
 
 function readSettings() {
@@ -38,8 +51,29 @@ function createWindow() {
     },
     show: false
   });
-  mainWindow.loadFile(path.join(__dirname, 'ui', 'index.html'));
-  mainWindow.once('ready-to-show', () => mainWindow.show());
+  mainWindow.loadFile(path.join(__dirname, 'ui', 'index.html'))
+    .then(() => log('UI loaded OK'))
+    .catch((e) => log('UI LOAD FAILED:', e && e.message));
+
+  mainWindow.webContents.on('did-fail-load', (_e, code, desc, url) => {
+    log(`did-fail-load ${code} ${desc} ${url}`);
+  });
+  mainWindow.webContents.on('render-process-gone', (_e, details) => {
+    log('render-process-gone:', JSON.stringify(details));
+  });
+  mainWindow.webContents.on('preload-error', (_e, p, err) => {
+    log('preload-error', p, err && err.message);
+  });
+  mainWindow.webContents.on('console-message', (_e, level, message) => {
+    if (level >= 2) log('renderer console:', message);
+  });
+
+  // Show the window once the page is ready — with a fallback so the app is
+  // never left invisible if 'ready-to-show' does not fire.
+  const show = () => { if (mainWindow && !mainWindow.isDestroyed()) mainWindow.show(); };
+  mainWindow.once('ready-to-show', show);
+  setTimeout(show, 4000);
+
   mainWindow.on('closed', () => { mainWindow = null; });
 }
 
@@ -176,17 +210,23 @@ ipcMain.handle('app:info', () => ({
 }));
 
 ipcMain.handle('dialog:pickFiles', async () => {
-  const res = await dialog.showOpenDialog(mainWindow, {
-    title: 'Import purchase orders',
-    properties: ['openFile', 'multiSelections'],
-    filters: [
-      { name: 'Purchase orders', extensions: ['pdf', 'zip', 'png', 'jpg', 'jpeg'] },
-      { name: 'All files', extensions: ['*'] }
-    ]
-  });
-  if (res.canceled) return { canceled: true, records: [] };
-  const records = await importPaths(res.filePaths);
-  return { canceled: false, records, paths: res.filePaths };
+  try {
+    const res = await dialog.showOpenDialog(mainWindow, {
+      title: 'Import purchase orders',
+      properties: ['openFile', 'multiSelections'],
+      filters: [
+        { name: 'Purchase orders', extensions: ['pdf', 'zip', 'png', 'jpg', 'jpeg'] },
+        { name: 'All files', extensions: ['*'] }
+      ]
+    });
+    if (!res || res.canceled) return { canceled: true, records: [] };
+    const records = await importPaths(res.filePaths);
+    return { canceled: false, records, paths: res.filePaths };
+  } catch (e) {
+    // A dismissed/cancelled native dialog can reject; always answer the renderer.
+    log('dialog:pickFiles failed:', e && e.message);
+    return { canceled: true, records: [] };
+  }
 });
 
 ipcMain.handle('import:paths', async (_e, paths) => {
@@ -195,8 +235,13 @@ ipcMain.handle('import:paths', async (_e, paths) => {
 });
 
 ipcMain.handle('dialog:pickFolder', async () => {
-  const res = await dialog.showOpenDialog(mainWindow, { properties: ['openDirectory', 'createDirectory'] });
-  return res.canceled ? null : res.filePaths[0];
+  try {
+    const res = await dialog.showOpenDialog(mainWindow, { properties: ['openDirectory', 'createDirectory'] });
+    return !res || res.canceled ? null : res.filePaths[0];
+  } catch (e) {
+    log('dialog:pickFolder failed:', e && e.message);
+    return null;
+  }
 });
 
 ipcMain.handle('render:preview', async (_e, rec, kind) => renderDocument(rec, kind));
@@ -247,10 +292,11 @@ ipcMain.handle('settings:set', (_e, patch) => {
 });
 
 app.whenReady().then(() => {
+  log('app ready, electron', process.versions.electron);
   nativeTheme.themeSource = 'dark';
   createWindow();
   app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); });
-});
+}).catch((e) => log('whenReady failed:', e && e.stack || String(e)));
 
 app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
 app.on('before-quit', () => { if (printWindow && !printWindow.isDestroyed()) printWindow.destroy(); });
