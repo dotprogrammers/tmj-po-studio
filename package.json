@@ -1,0 +1,43 @@
+{
+  "name": "tmj-po-studio",
+  "version": "1.0.0",
+  "description": "Treasure Mountain PO Studio - import Albern purchase-order PDFs/Zips, auto-extract, review, and generate premium Treasure Mountain PDFs (Windows + macOS)",
+  "main": "main.js",
+  "author": "Treasure Mountain Jewelshop Ltd / MD Abu Sayeed",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dist:mac": "electron-builder --mac",
+    "dist:win": "electron-builder --win",
+    "dist:all": "electron-builder --mac --win"
+  },
+  "devDependencies": {
+    "electron": "^31.3.0",
+    "electron-builder": "^24.13.3"
+  },
+  "dependencies": {
+    "adm-zip": "^0.5.14",
+    "pdfjs-dist": "3.11.174"
+  },
+  "build": {
+    "appId": "com.treasuremountain.postudio",
+    "productName": "TMJ PO Studio",
+    "directories": { "output": "dist" },
+    "files": [
+      "main.js",
+      "preload.js",
+      "parser/**",
+      "renderer/**",
+      "ui/**",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.business",
+      "target": [{ "target": "dmg", "arch": ["x64", "arm64"] }, { "target": "zip", "arch": ["x64", "arm64"] }]
+    },
+    "win": {
+      "target": [{ "target": "nsis", "arch": ["x64"] }]
+    },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true }
+  }
+}

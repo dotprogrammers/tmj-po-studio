@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TMJ PO Studio</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app" id="app">
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="mark">TM</div>
+      <div class="brand-text">
+        <strong>PO Studio</strong>
+        <span>Treasure Mountain Jewelshop</span>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-item active" data-view="import">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        Import
+      </button>
+      <button class="nav-item" data-view="review">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11l3 3 8-8M4 4h9M4 12h5M4 20h16"/></svg>
+        Review <span class="pill" id="countPill">0</span>
+      </button>
+      <button class="nav-item" data-view="documents">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>
+        Output
+      </button>
+      <button class="nav-item" data-view="settings">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 7 19.4l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.7 1.7 0 0 0 3 13.6H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 7l-.1-.1a2 2 0 1 1 2.8-2.8L7.4 4A1.7 1.7 0 0 0 10 3.1V3a2 2 0 1 1 4 0v.1A1.7 1.7 0 0 0 16.6 4.6l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1A1.7 1.7 0 0 0 20.9 10H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+        Settings
+      </button>
+    </nav>
+
+    <div class="side-foot">
+      <span class="dot" id="engineDot"></span>
+      <span id="engineLabel">Engine ready</span>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <h1 id="viewTitle">Import purchase orders</h1>
+        <p class="sub" id="viewSub">Drop Albern PDFs, a ZIP of PDFs, or images. Everything is parsed on this device.</p>
+      </div>
+      <div class="top-actions">
+        <button class="btn ghost" id="btnSettings">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 7 19.4l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.7 1.7 0 0 0 3 13.6H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 7l-.1-.1a2 2 0 1 1 2.8-2.8L7.4 4A1.7 1.7 0 0 0 10 3.1V3a2 2 0 1 1 4 0v.1A1.7 1.7 0 0 0 16.6 4.6l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1A1.7 1.7 0 0 0 20.9 10H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ---------- IMPORT ---------- -->
+    <section class="view active" id="view-import">
+      <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Drop purchase order files or click to browse">
+        <div class="dz-glow"></div>
+        <div class="dz-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0 4 4m-4-4L8 8"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+        </div>
+        <h2>Drop purchase orders here</h2>
+        <p>PDF · ZIP · PNG / JPG — batch or single file</p>
+        <button class="btn primary" id="btnBrowse">Choose files</button>
+        <span class="dz-hint">or press ⌘O / Ctrl+O</span>
+      </div>
+
+      <div class="cards" id="importKpis">
+        <div class="kpi">
+          <span class="kpi-label">Files parsed</span>
+          <strong class="kpi-value" id="kpiFiles">—</strong>
+        </div>
+        <div class="kpi">
+          <span class="kpi-label">Clean</span>
+          <strong class="kpi-value ok" id="kpiOk">—</strong>
+        </div>
+        <div class="kpi">
+          <span class="kpi-label">Needs review</span>
+          <strong class="kpi-value warn" id="kpiReview">—</strong>
+        </div>
+        <div class="kpi">
+          <span class="kpi-label">Batch value</span>
+          <strong class="kpi-value" id="kpiValue">—</strong>
+        </div>
+      </div>
+
+      <div class="panel" id="importLogPanel" hidden>
+        <div class="panel-head">
+          <h3>Import log</h3>
+          <button class="btn tiny ghost" id="clearLog">Clear</button>
+        </div>
+        <ul class="log" id="importLog"></ul>
+      </div>
+    </section>
+
+    <!-- ---------- REVIEW ---------- -->
+    <section class="view" id="view-review">
+      <div class="review-grid">
+        <div class="panel list-panel">
+          <div class="panel-head">
+            <h3>Records <span class="muted" id="recCount">(0)</span></h3>
+            <div class="seg" role="tablist">
+              <button class="seg-btn active" data-filter="all">All</button>
+              <button class="seg-btn" data-filter="review">Review</button>
+              <button class="seg-btn" data-filter="ok">Clean</button>
+            </div>
+          </div>
+          <ul class="rec-list" id="recList">
+            <li class="empty">Import files to see records.</li>
+          </ul>
+        </div>
+
+        <div class="panel editor">
+          <div class="empty-editor" id="emptyEditor">
+            <div class="ee-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>
+            </div>
+            <p>Select a record to review and edit.</p>
+          </div>
+
+          <div class="editor-body" id="editorBody" hidden>
+            <div class="editor-head">
+              <div>
+                <h2 id="edTitle">PO 000000</h2>
+                <span class="badge" id="edBadge">Clean</span>
+              </div>
+              <div class="editor-actions">
+                <button class="btn ghost" id="btnReset">Reset changes</button>
+                <button class="btn primary" id="btnSaveRec">Save record</button>
+              </div>
+            </div>
+
+            <div class="warnbox" id="edWarnings" hidden>
+              <strong>Check these before generating</strong>
+              <ul id="edWarnList"></ul>
+            </div>
+
+            <div class="form-grid">
+              <label class="field">
+                <span>Treasure Mountain PO #</span>
+                <input id="fOwnPo" type="number" min="1" step="1" placeholder="auto">
+              </label>
+              <label class="field">
+                <span>Albern PO #</span>
+                <input id="fPo" type="text">
+              </label>
+              <label class="field">
+                <span>Date</span>
+                <input id="fDate" type="date">
+              </label>
+              <label class="field">
+                <span>Payment type</span>
+                <input id="fPayType" type="text" placeholder="Cheque">
+              </label>
+              <label class="field">
+                <span>Cheque / reference #</span>
+                <input id="fPayRef" type="text">
+              </label>
+              <label class="field">
+                <span>Amount paid</span>
+                <input id="fPaid" type="number" step="0.01">
+              </label>
+            </div>
+
+            <div class="section-head">
+              <h3>Line items</h3>
+              <button class="btn tiny" id="btnAddItem">+ Add line</button>
+            </div>
+            <table class="item-table">
+              <thead>
+                <tr><th>Description</th><th class="w-qty">Qty</th><th class="w-money">Unit price</th><th class="w-money">Total</th><th class="w-x"></th></tr>
+              </thead>
+              <tbody id="itemRows"></tbody>
+            </table>
+
+            <div class="totals-edit">
+              <label class="field"><span>Sub-total</span><input id="fSubtotal" type="number" step="0.01"></label>
+              <label class="field"><span>GST (5%)</span><input id="fGst" type="number" step="0.01"></label>
+              <label class="field"><span>Purchase total</span><input id="fTotal" type="number" step="0.01"></label>
+            </div>
+
+            <div class="preview-head">
+              <h3>Document preview</h3>
+              <div class="seg" id="kindSeg">
+                <button class="seg-btn active" data-kind="invoice">Invoice</button>
+                <button class="seg-btn" data-kind="po">Purchase Order</button>
+              </div>
+              <button class="btn tiny ghost" id="btnRefreshPreview">Refresh</button>
+            </div>
+            <div class="preview-frame">
+              <iframe id="previewFrame" title="Document preview"></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- DOCUMENTS ---------- -->
+    <section class="view" id="view-documents">
+      <div class="gen-bar panel">
+        <div class="gen-left">
+          <label class="field inline">
+            <span>Output folder</span>
+            <input id="outDir" type="text" readonly>
+          </label>
+          <button class="btn ghost" id="btnPickDir">Change</button>
+        </div>
+        <div class="gen-right">
+          <div class="seg" id="genKind">
+            <button class="seg-btn active" data-kind="invoice">Invoices</button>
+            <button class="seg-btn" data-kind="po">Purchase Orders</button>
+          </div>
+          <button class="btn primary" id="btnGenerateAll">Generate all →</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3>Generated documents</h3>
+          <button class="btn tiny ghost" id="btnOpenDir">Open folder</button>
+        </div>
+        <ul class="doc-list" id="docList">
+          <li class="empty">No documents generated yet.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ---------- SETTINGS ---------- -->
+    <section class="view" id="view-settings">
+      <div class="panel pad">
+        <h3>Numbering</h3>
+        <p class="muted">Treasure Mountain PO numbers are assigned in sequence, independent of Albern's numbering.</p>
+        <label class="field" style="max-width:260px">
+          <span>Next Treasure Mountain PO #</span>
+          <input id="setNextPo" type="number" min="1" step="1">
+        </label>
+
+        <h3 style="margin-top:28px">Output</h3>
+        <label class="field" style="max-width:560px">
+          <span>Default folder</span>
+          <input id="setOutDir" type="text" readonly>
+        </label>
+
+        <h3 style="margin-top:28px">About</h3>
+        <dl class="about" id="aboutList"></dl>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="toast-wrap" id="toasts" aria-live="polite"></div>
+<input type="file" id="hiddenFile" multiple accept=".pdf,.zip,.png,.jpg,.jpeg" hidden>
+<script src="app.js"></script>
+</body>
+</html>
