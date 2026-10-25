@@ -241,10 +241,17 @@
         </label>
 
         <h3 style="margin-top:28px">Output</h3>
-        <label class="field" style="max-width:560px">
-          <span>Default folder</span>
-          <input id="setOutDir" type="text" readonly>
-        </label>
+        <p class="muted">PDFs are written here after you press Generate.</p>
+        <div class="out-row">
+          <label class="field" style="flex:1;min-width:0">
+            <span>Default folder</span>
+            <input id="setOutDir" type="text" readonly>
+          </label>
+          <button class="btn primary" id="btnSetOutDir">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            Choose folder…
+          </button>
+        </div>
 
         <h3 style="margin-top:28px">About</h3>
         <dl class="about" id="aboutList"></dl>

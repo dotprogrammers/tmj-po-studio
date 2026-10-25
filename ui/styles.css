@@ -255,6 +255,10 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 
 .totals-edit{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;max-width:560px;margin-left:auto}
 
+.out-row{display:flex;align-items:flex-end;gap:10px;max-width:640px}
+.out-row .field{flex:1;min-width:0}
+.out-row input{font-family:var(--mono);font-size:12.4px}
+
 .preview-head{display:flex;align-items:center;gap:10px;margin-top:6px;padding-top:14px;border-top:1px solid var(--line)}
 .preview-head h3{margin:0;font-size:13px;margin-right:auto}
 .preview-frame{background:#eef1f5;border-radius:12px;overflow:hidden;border:1px solid var(--line)}

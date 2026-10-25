@@ -270,6 +270,17 @@ async function pickFiles() {
   await ingest(res.records, 'dialog');
 }
 
+/* ---------------- output folder ---------------- */
+async function pickOutputDir() {
+  const dir = await window.api.pickFolder();
+  if (!dir) return;
+  state.outDir = dir;
+  $('#outDir').value = dir;
+  $('#setOutDir').value = dir;
+  await window.api.setSettings({ outputDir: dir });
+  toast('Output folder set to ' + dir, 'ok');
+}
+
 /* ---------------- generation ---------------- */
 function syncAllFromEditor() {
   const rec = activeRecord();
@@ -406,10 +417,8 @@ function bind() {
   });
   $('#btnReset').addEventListener('click', () => { renderEditor(); toast('Editor reloaded from stored values.'); });
 
-  $('#btnPickDir').addEventListener('click', async () => {
-    const dir = await window.api.pickFolder();
-    if (dir) { state.outDir = dir; $('#outDir').value = dir; $('#setOutDir').value = dir; await window.api.setSettings({ outputDir: dir }); }
-  });
+  $('#btnPickDir').addEventListener('click', pickOutputDir);
+  $('#btnSetOutDir').addEventListener('click', pickOutputDir);
   $('#btnOpenDir').addEventListener('click', () => window.api.openPath(state.outDir));
   $('#btnGenerateAll').addEventListener('click', generateAll);
   $('#btnSettings').addEventListener('click', () => showView('settings'));
