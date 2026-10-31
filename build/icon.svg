@@ -1,0 +1,51 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#16283f"/>
+      <stop offset="1" stop-color="#0a1524"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#eed671"/>
+      <stop offset="0.55" stop-color="#d4af37"/>
+      <stop offset="1" stop-color="#a8871e"/>
+    </linearGradient>
+    <linearGradient id="gold2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f3e08a"/>
+      <stop offset="1" stop-color="#c9a227"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.36" r="0.75">
+      <stop offset="0" stop-color="#2a4a73" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="#16283f" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- rounded square background (macOS style margin handled by iconset padding) -->
+  <rect x="64" y="64" width="896" height="896" rx="206" fill="url(#bg)"/>
+  <rect x="64" y="64" width="896" height="896" rx="206" fill="url(#glow)"/>
+  <rect x="70" y="70" width="884" height="884" rx="200" fill="none" stroke="#3d5corn" stroke-width="0"/>
+
+  <!-- diamond facet top accent -->
+  <g transform="translate(512 236)">
+    <path d="M -110 0 L -55 -52 L 55 -52 L 110 0 L 0 96 Z" fill="url(#gold2)" opacity="0.95"/>
+    <path d="M -110 0 L 110 0" stroke="#0a1524" stroke-opacity="0.35" stroke-width="5"/>
+    <path d="M -55 -52 L -36 0 M 55 -52 L 36 0 M 0 96 L -36 0 M 0 96 L 36 0" stroke="#0a1524" stroke-opacity="0.3" stroke-width="4" fill="none"/>
+  </g>
+
+  <!-- TM monogram -->
+  <g fill="url(#gold)">
+    <!-- T -->
+    <path d="M 236 420 h 260 v 96 h -82 v 300 h -96 v -300 h -82 z"/>
+    <!-- M -->
+    <path d="M 548 420 h 100 l 68 168 68 -168 h 100 v 396 h -94 v -232 l -74 172 -74 -172 v 232 h -94 z"/>
+  </g>
+
+  <!-- PO ribbon -->
+  <g transform="translate(512 872)">
+    <rect x="-228" y="-44" width="456" height="88" rx="44" fill="url(#gold2)"/>
+    <text x="0" y="24" font-family="Helvetica, Arial, sans-serif" font-size="64" font-weight="700"
+          fill="#0a1524" text-anchor="middle" letter-spacing="14">PO</text>
+  </g>
+
+  <!-- inner hairline -->
+  <rect x="88" y="88" width="848" height="848" rx="188" fill="none" stroke="#c9a227" stroke-opacity="0.35" stroke-width="3"/>
+</svg>

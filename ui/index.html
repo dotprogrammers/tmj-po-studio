@@ -31,6 +31,10 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>
         Output
       </button>
+      <button class="nav-item" data-view="gallery">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+        Gallery <span class="pill" id="galPill">0</span>
+      </button>
       <button class="nav-item" data-view="settings">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 7 19.4l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.7 1.7 0 0 0 3 13.6H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 7l-.1-.1a2 2 0 1 1 2.8-2.8L7.4 4A1.7 1.7 0 0 0 10 3.1V3a2 2 0 1 1 4 0v.1A1.7 1.7 0 0 0 16.6 4.6l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1A1.7 1.7 0 0 0 20.9 10H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
         Settings
@@ -190,10 +194,15 @@
                 <button class="seg-btn active" data-kind="invoice">Invoice</button>
                 <button class="seg-btn" data-kind="po">Purchase Order</button>
               </div>
+              <button class="btn" id="btnPreviewRec">Preview full size</button>
+              <button class="btn approved-btn" id="btnApprove">Approve invoice</button>
               <button class="btn tiny ghost" id="btnRefreshPreview">Refresh</button>
             </div>
             <div class="preview-frame">
               <iframe id="previewFrame" title="Document preview"></iframe>
+            </div>
+            <div class="editor-foot">
+              <button class="btn danger" id="btnDeleteRec">Delete record</button>
             </div>
           </div>
         </div>
@@ -257,11 +266,40 @@
         <dl class="about" id="aboutList"></dl>
       </div>
     </section>
+
+    <!-- ---------- GALLERY ---------- -->
+    <section class="view" id="view-gallery">
+      <div class="panel gal-bar">
+        <div class="panel-head" style="border:0;padding:14px 16px">
+          <h3>Generated documents <span class="muted" id="galCount">(0)</span></h3>
+          <button class="btn tiny ghost" id="btnGalleryRefresh">Refresh</button>
+        </div>
+      </div>
+      <div class="gal-grid" id="galGrid">
+        <div class="empty gal-empty">No documents yet. Import purchase orders and press Generate.</div>
+      </div>
+    </section>
   </main>
+</div>
+
+<!-- ---------- PREVIEW MODAL ---------- -->
+<div class="modal-backdrop" id="previewModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Document preview">
+    <div class="modal-head">
+      <h3 id="pmTitle">Preview</h3>
+      <div class="modal-actions">
+        <button class="btn primary" id="pmPrint">Print / Save PDF</button>
+        <button class="btn ghost" id="pmClose">Close</button>
+      </div>
+    </div>
+    <div class="modal-body" id="pmBody"></div>
+  </div>
 </div>
 
 <div class="toast-wrap" id="toasts" aria-live="polite"></div>
 <input type="file" id="hiddenFile" multiple accept=".pdf,.zip,.png,.jpg,.jpeg" hidden>
+<script src="../node_modules/pdfjs-dist/legacy/build/pdf.min.js"></script>
+<script>if (window.pdfjsLib) { window.pdfjsLib.GlobalWorkerOptions.workerSrc = '../node_modules/pdfjs-dist/legacy/build/pdf.worker.min.js'; } else { window.pdfjsLib = null; }</script>
 <script src="app.js"></script>
 </body>
 </html>

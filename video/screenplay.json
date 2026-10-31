@@ -1,0 +1,94 @@
+{
+  "video": {
+    "title": "TMJ PO Studio — Product Walkthrough",
+    "subtitle": "From Albern purchase orders to Treasure Mountain invoices, in minutes",
+    "resolution": "1920x1080",
+    "fps": 30
+  },
+  "scenes": [
+    {
+      "id": 1,
+      "title": "Opening",
+      "subtitle": "TMJ PO Studio — Purchase orders made simple",
+      "narration": "Meet T-M-J P-O Studio. The fastest way to turn Albern purchase orders into professional Treasure Mountain invoices. No typing. No re-entry. Just drop the files, review, and generate.",
+      "screen": "title"
+    },
+    {
+      "id": 2,
+      "title": "The Problem",
+      "subtitle": "Manual invoice entry takes hours — and invites mistakes",
+      "narration": "Every month, Albern sends dozens of purchase orders as P-D-Fs. Copying each one into an invoice by hand means hours of typing, and one wrong digit can cost real money. There had to be a better way.",
+      "screen": "problem"
+    },
+    {
+      "id": 3,
+      "title": "Import",
+      "subtitle": "Drag & drop PDFs, ZIPs or images",
+      "narration": "Start by importing your purchase orders. Drag and drop single P-D-Fs, an entire zip archive, or even scanned images. The studio unpacks everything automatically — no setup, no configuration.",
+      "screen": "import"
+    },
+    {
+      "id": 4,
+      "title": "Smart Parsing",
+      "subtitle": "Every field extracted automatically",
+      "narration": "The parsing engine reads each document and extracts every field — the purchase order number, the date, line items, quantities, unit prices, totals, and the cheque reference. It understands the layout the way a person does.",
+      "screen": "import"
+    },
+    {
+      "id": 5,
+      "title": "Validation",
+      "subtitle": "Built-in arithmetic checks catch mistakes before they cost you",
+      "narration": "Every record is cross-checked automatically. Line items must add up to the sub-total. Sub-total plus G-S-T must equal the purchase total. Payments must match. Anything that doesn't reconcile is flagged for review before it ever reaches an invoice.",
+      "screen": "review"
+    },
+    {
+      "id": 6,
+      "title": "Review & Edit",
+      "subtitle": "Correct anything in seconds",
+      "narration": "Everything lands in the review workspace. You can see every extracted value, fix a description, adjust a quantity, or add a line. Totals recompute instantly as you type, and the live preview shows exactly what the final P-D-F will look like.",
+      "screen": "review"
+    },
+    {
+      "id": 7,
+      "title": "Live Preview",
+      "subtitle": "What you see is exactly what you get",
+      "narration": "The preview isn't an approximation. It's the real document — same layout, same fonts, same numbers — rendered by the same engine that produces the final P-D-F.",
+      "screen": "review"
+    },
+    {
+      "id": 8,
+      "title": "One-Click Generation",
+      "subtitle": "One click turns the whole batch into print-ready PDFs",
+      "narration": "When everything checks out, one click generates the entire batch. Every invoice is a print-ready, letter-size P-D-F with Treasure Mountain's own branding — navy headers, clean tables, professional typography.",
+      "screen": "documents"
+    },
+    {
+      "id": 9,
+      "title": "Your Own Numbering",
+      "subtitle": "Purchase orders under your own sequence — independent of Albern",
+      "narration": "The studio also issues purchase orders under your own numbering. Your sequence starts wherever you like — zero-zero-zero-zero-zero-two, zero-three — completely independent of Albern's system, with the Albern reference printed alongside.",
+      "screen": "documents"
+    },
+    {
+      "id": 10,
+      "title": "Choose Where Files Go",
+      "subtitle": "Pick any folder on your computer",
+      "narration": "Output goes wherever you want. Choose a folder once, and every document lands there, named clearly so nothing gets lost.",
+      "screen": "settings"
+    },
+    {
+      "id": 11,
+      "title": "Private & Secure",
+      "subtitle": "Everything stays on your computer",
+      "narration": "And your data never leaves your machine. There's no cloud upload, no account, no subscription. Parsing, rendering, and storage all happen locally. It's your information, on your computer.",
+      "screen": "settings"
+    },
+    {
+      "id": 12,
+      "title": "Closing",
+      "subtitle": "TMJ PO Studio — Try it today",
+      "narration": "T-M-J P-O Studio. Import. Review. Generate. Professional invoices in minutes — not hours.",
+      "screen": "closing"
+    }
+  ]
+}

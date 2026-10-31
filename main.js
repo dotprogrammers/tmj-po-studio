@@ -43,6 +43,7 @@ function createWindow() {
     backgroundColor: '#0b1220',
     titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
     trafficLightPosition: { x: 16, y: 18 },
+    icon: path.join(__dirname, 'build', process.platform === 'win32' ? 'icon.ico' : 'icon_256.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -208,6 +209,114 @@ ipcMain.handle('app:info', () => ({
   downloads: app.getPath('downloads'),
   settings: readSettings()
 }));
+
+/* ---- generated-document management (gallery / output / approval) ---- */
+const APPROVALS_FILE = () => path.join(app.getPath('userData'), 'approvals.json');
+function readApprovals() {
+  try { return JSON.parse(fs.readFileSync(APPROVALS_FILE(), 'utf8')); }
+  catch { return {}; }
+}
+function writeApprovals(a) {
+  try { fs.mkdirSync(path.dirname(APPROVALS_FILE()), { recursive: true }); fs.writeFileSync(APPROVALS_FILE(), JSON.stringify(a, null, 2)); } catch (e) { console.error('approvals write failed', e); }
+}
+
+ipcMain.handle('docs:list', async () => {
+  const st = readSettings();
+  const approvals = readApprovals();
+  const seen = new Set();
+  const docs = [];
+  // Only documents the app itself wrote (lastDocs) — the output folder may
+  // contain unrelated PDFs, and flooding the gallery with them is wrong.
+  const scan = (rec) => {
+    if (!rec || !rec.path || seen.has(rec.path)) return;
+    seen.add(rec.path);
+    docs.push({
+      path: rec.path,
+      file: path.basename(rec.path),
+      po: rec.po || null,
+      ownPo: rec.ownPo || null,
+      approved: approvals[rec.path] === true,
+      exists: fs.existsSync(rec.path)
+    });
+  };
+  (st.lastDocs || []).forEach(scan);
+  docs.sort((a, b) => b.file.localeCompare(a.file));
+  return docs;
+});
+
+ipcMain.handle('docs:read', async (_e, p) => {
+  const buf = await fsp.readFile(p);
+  return { base64: buf.toString('base64') };
+});
+
+ipcMain.handle('docs:approve', async (_e, { path: p, approved }) => {
+  const a = readApprovals();
+  if (approved) a[p] = true; else delete a[p];
+  writeApprovals(a);
+  return { ok: true };
+});
+
+ipcMain.handle('docs:delete', async (_e, p) => {
+  // Trash, not rm — recoverable.
+  try { await shell.trashItem(p); return { ok: true, trashed: true }; }
+  catch (e) { return { ok: false, error: e.message }; }
+});
+
+/* ---- Print / Save PDF: render the document HTML to a real PDF via an
+   offscreen window, save to Downloads, and reveal it. This avoids
+   webContents.print() and iframe print(), which can hang the modal. ---- */
+ipcMain.handle('print:doc', async (_e, { html, filename }) => {
+  const tmpDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'tmj-print-'));
+  let w = null;
+  try {
+    const htmlPath = path.join(tmpDir, 'doc.html');
+    await fsp.writeFile(htmlPath, html, 'utf8');
+    w = new BrowserWindow({ show: false });
+    await w.loadFile(htmlPath);
+    await new Promise(r => setTimeout(r, 300));
+    const pdf = await w.webContents.printToPDF({
+      printBackground: true,
+      pageSize: 'Letter',
+      margins: { top: 0, bottom: 0, left: 0, right: 0 },
+      preferCSSPageSize: true
+    });
+    const downloads = app.getPath('downloads');
+    const base = String(filename || 'Document').replace(/[\\/:*?"<>|]/g, '-').replace(/\.pdf$/i, '');
+    let target = path.join(downloads, base + '.pdf');
+    let i = 1;
+    while (fs.existsSync(target)) {
+      target = path.join(downloads, `${base} (${i}).pdf`);
+      i += 1;
+    }
+    await fsp.writeFile(target, pdf);
+    shell.showItemInFolder(target);
+    return { ok: true, path: target };
+  } catch (e) {
+    return { ok: false, error: e.message };
+  } finally {
+    if (w && !w.isDestroyed()) w.destroy();
+    await fsp.rm(tmpDir, { recursive: true, force: true }).catch(() => {});
+  }
+});
+
+/* ---- direct buffer import (drag & drop from the renderer) ---- */
+ipcMain.handle('import:buffers', async (_e, payload) => {
+  const tmpDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'tmj-import-'));
+  const records = [];
+  try {
+    for (const item of (payload || [])) {
+      const safe = String(item.name || 'upload.pdf').replace(/[\/\\:*?"<>|]/g, '_');
+      const target = path.join(tmpDir, safe);
+      await fsp.writeFile(target, Buffer.from(item.base64, 'base64'));
+    }
+    const paths = (await fsp.readdir(tmpDir)).map(f => path.join(tmpDir, f));
+    const recs = await importPaths(paths);
+    records.push(...recs);
+  } finally {
+    await fsp.rm(tmpDir, { recursive: true, force: true }).catch(() => {});
+  }
+  return { records };
+});
 
 ipcMain.handle('dialog:pickFiles', async () => {
   try {

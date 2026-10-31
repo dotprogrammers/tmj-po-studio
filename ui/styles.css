@@ -335,3 +335,64 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
   .gen-bar{flex-direction:column;align-items:stretch}
   .gen-left,.gen-right{width:100%}
 }
+
+/* ================= gallery ================= */
+.gal-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:14px;margin-top:14px;overflow-y:auto;flex:1;
+  padding-bottom:30px;align-content:start;
+}
+.gal-empty{grid-column:1/-1;padding:60px 20px;text-align:center;color:var(--ink-3);font-size:13px;
+  border:1.5px dashed var(--line-strong);border-radius:14px}
+.gal-card{
+  background:linear-gradient(180deg,rgba(19,31,51,.92),rgba(11,18,30,.92));
+  border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  transition:transform .15s ease,border-color .15s ease;
+}
+.gal-card:hover{transform:translateY(-2px);border-color:rgba(201,162,39,.35)}
+.gal-thumb{height:210px;background:#e8edf3;overflow:hidden;position:relative;cursor:zoom-in}
+.gal-thumb canvas{width:100%;height:auto;display:block}
+.gal-missing{display:grid;place-items:center;height:100%;color:#6b7280;font-size:12px}
+.gal-name{font-size:12.6px;font-weight:650;padding:10px 12px 2px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.gal-meta{font-size:11.3px;color:var(--ink-3);padding:0 12px 8px;display:flex;gap:6px;align-items:center}
+.gal-actions{display:flex;gap:6px;padding:0 12px 12px;flex-wrap:wrap}
+
+/* ================= preview modal ================= */
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(4,8,15,.78);backdrop-filter:blur(6px);
+  display:grid;place-items:center;z-index:100;padding:28px;
+}
+.modal{
+  width:min(980px,94vw);height:min(92vh,900px);display:flex;flex-direction:column;
+  background:var(--panel);border:1px solid var(--line-strong);border-radius:16px;
+  box-shadow:0 40px 90px -30px rgba(0,0,0,.9);overflow:hidden;
+}
+.modal-head{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:14px 18px;border-bottom:1px solid var(--line)}
+.modal-head h3{margin:0;font-size:14.5px}
+.modal-actions{display:flex;gap:8px}
+.modal-body{flex:1;overflow:auto;background:#2a3444;display:grid;place-items:start center;padding:20px}
+.pm-canvas{background:#fff;box-shadow:0 10px 40px rgba(0,0,0,.5);max-width:100%;height:auto}
+.pm-loading{color:#aab6c9;font-size:13px;padding:40px;text-align:center;line-height:1.6}
+.modal-body iframe{width:100%;height:100%;border:0;background:#fff}
+
+/* ================= statuses ================= */
+.chip.approved{background:rgba(201,162,39,.16);color:var(--gold-2)}
+.badge.approved{background:rgba(201,162,39,.16);color:var(--gold-2)}
+.approved-btn{background:linear-gradient(145deg,#2f9e6e,#1f7a52)!important;border-color:rgba(47,158,110,.6)!important;color:#fff!important}
+.btn.danger{border-color:rgba(248,113,113,.4);color:var(--danger)}
+.btn.danger:hover{background:rgba(248,113,113,.12)}
+.icon-btn.del:hover{color:var(--danger);border-color:rgba(248,113,113,.45);background:rgba(248,113,113,.08)}
+.rec-actions{display:flex;gap:6px;align-items:center}
+.editor-foot{margin-top:auto;padding-top:12px;display:flex;justify-content:flex-end;border-top:1px solid var(--line)}
+.editor-body.locked .editor-foot{display:none}
+#view-gallery{display:none;flex-direction:column}
+#view-gallery.active{display:flex}
+.gal-bar{flex:0 0 auto}
+
+/* ================= fix: hidden attribute must always win =================
+   Author display rules (.modal-backdrop{display:grid}, .editor-body{display:flex},
+   .empty-editor{display:flex}) were overriding the UA's [hidden]{display:none},
+   which made the preview modal permanently visible and impossible to close. */
+[hidden]{display:none !important}
