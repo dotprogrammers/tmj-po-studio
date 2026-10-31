@@ -30,6 +30,16 @@ Windows and macOS.
     Sub-Total + GST = Total, payments = Total — anything off is flagged for review
 - **Review workspace**: edit every field, add/remove lines, totals auto-recompute,
   live document preview that is pixel-identical to the output PDF
+- **Approve & lock**: one click locks a reviewed invoice against accidental
+  edits — revocable anytime, status shown as a gold chip on every record
+- **Delete options**: remove records while reviewing; delete generated
+  documents (moved to Trash, recoverable)
+- **Preview modal**: full-size preview of the live document, plus page-one
+  rendering of generated PDFs via pdf.js; Print / Save PDF writes a real PDF
+  to Downloads (no OS print dialog to hang)
+- **Gallery**: every generated document as a thumbnail card with status chip
+  and Preview / Approve / Open / Delete actions
+- **Logo & icon**: gold TM monogram with diamond facet (icns + ico)
 - **Two document kinds**
   - *Invoice* — `Invoice - TMJ-YYYY-MMDD - PO NNNNNN.pdf` (matches delivered batches)
   - *Purchase Order* — `TMJ Purchase Order NNNNNN - Albern PO NNNNNN.pdf` with Jami's
